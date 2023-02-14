@@ -65,7 +65,7 @@ class Page extends BasePage
 	<head>
 		<title>{$this->title}</title>
 		<meta name="description" content="Tegaki's doodles (and more?)"/>
-		<meta name="viewport" content="width=1024">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="theme-color" content="#7EB977">
 		<link rel="stylesheet" href="$data_href/themes/$theme_name/menuh.css?_=1" type="text/css">
 $header_html
@@ -78,7 +78,6 @@ $header_html
 			webpMachine.polyfillDocument()
 		});
 		</script>
-		<script src="/themes/r34custom/prebid-ads.js"></script>
 		<script>
 		function makeid(length) {
 			var result           = '';
