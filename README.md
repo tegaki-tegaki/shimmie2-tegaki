@@ -14,6 +14,14 @@
 [![Code Quality](https://scrutinizer-ci.com/g/shish/shimmie2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/shish/shimmie2/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/shish/shimmie2/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/shish/shimmie2/?branch=master)
 
+# What's different?!
+
+- custom theme `r34custom` (you could use it as a more "whitelabel" rule34 theme)
+  - removed a bunch of the juicyADS stuff, tracking etc...
+  - removed links that go outside the booru itself (hard-coded links to paheal.net), they should now all be relative instead.
+- attempt to make most of the core extensions work OOTB with PostgreSQL
+  - many extensions are MySQL specific, so it seems to break with PostgreSQL
+- `/scripts` directory... for handy dev stuff
 
 # Documentation
 

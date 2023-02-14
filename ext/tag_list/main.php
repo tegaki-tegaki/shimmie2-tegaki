@@ -612,6 +612,10 @@ class TagList extends Extension
             }
             $cache->set($cache_key, $related_tags, 60 * 60);
         }
-        return $related_tags;
+        if ($related_tags === false or $related_tags === null) {
+            return [];
+        } else {
+            return $related_tags;
+        }
     }
 }

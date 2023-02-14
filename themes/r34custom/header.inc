@@ -30,7 +30,7 @@
 	<ul>
 		<li><a href="/" class="top_parent">Main &#9660;</a>
 		<ul>
-			<li><a href="index.php?q=/post/list" class="sub_option">Home page</a></li>
+			<li><a href="/" class="sub_option">Home page</a></li>
 			<li><a href="index.php?q=/comment/list" class="sub_option">Comments</a></li>
 			<li><a href="index.php?q=/tags" class="sub_option">Tags</a></li>
 			<li><a href="index.php?q=/pool/list" class="sub_option">Pools</a></li>

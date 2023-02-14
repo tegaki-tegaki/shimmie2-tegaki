@@ -1,0 +1,28 @@
+services:
+  db:
+    container_name: db
+    image: postgres:15
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: shimmie
+      POSTGRES_USER: shimmie
+      POSTGRES_DB: shimmie
+    ports:
+      - "5432:5432"
+    networks: [ "shimmie_network" ]
+  shimmie2:
+    container_name: shimmie2
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./data/shimmie:/app/data
+    ports:
+      - 8000:8000
+    networks: [ "shimmie_network" ]
+networks:
+  shimmie_network:
+    driver: bridge
