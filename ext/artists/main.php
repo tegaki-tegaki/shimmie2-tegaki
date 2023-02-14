@@ -864,7 +864,7 @@ class Artists extends Extension
                                     ON a.user_id = u.id
                                 LEFT OUTER JOIN tags AS t
                                     ON a.name = t.tag
-                            GROUP BY a.id, a.user_id, a.name, u.name
+                            GROUP BY a.id, a.user_id, a.name, u.name, posts
                             ORDER BY a.updated DESC
                         )
 
@@ -880,7 +880,7 @@ class Artists extends Extension
                                     ON aa.artist_id = a.id
                                 LEFT OUTER JOIN tags AS t
                                     ON aa.alias = t.tag
-                            GROUP BY aa.id, a.user_id, aa.alias, u.name, a.id, a.name
+                            GROUP BY aa.id, a.user_id, aa.alias, u.name, a.id, a.name, posts
                             ORDER BY aa.updated DESC
                         )
 
@@ -896,11 +896,12 @@ class Artists extends Extension
                                     ON m.artist_id = a.id
                                 LEFT OUTER JOIN tags AS t
                                     ON m.name = t.tag
-                            GROUP BY m.id, m.user_id, m.name, u.name, a.id, a.name
+                            GROUP BY m.id, m.user_id, m.name, u.name, a.id, a.name, posts
                             ORDER BY m.updated DESC
                         )
                 ORDER BY updated DESC
-                LIMIT :offset, :limit
+                OFFSET :offset
+                LIMIT :limit
             ",
             [
                 "offset"=>$pageNumber * $artistsPerPage,
