@@ -20,3 +20,7 @@ docker-compose up --build
 #    password: shimmie
 # 2. now go into the data/config/shimmie.conf.php and set DEBUG = true
 #    define('DEBUG', true);
+# 3. disable quiet mode in tests/docker-init.sh (to get more logging on requests)
+#    remove the `-q`
+
+# now you can start making changes and rebuild+restart the shimmie2 container
