@@ -136,7 +136,7 @@ EOD;
 		</article>
 
 		<footer>
-		Thank you for being friendly! (and for checking out the booru!), the current TOS is: Don't be an asshole, and don't do illegal stuff!
+			Does anybody read this?
 		</footer>
 	</body>
 </html>

@@ -34,7 +34,7 @@ class PoolsTheme extends Themelet
         }
 
         if (count($linksPools) > 0) {
-            $page->add_block(new Block("Pools", implode("<br>", $linksPools), "left"));
+            $page->add_block(new Block("Pools", implode("<br>", $linksPools), "left", -10));
         }
     }
 
