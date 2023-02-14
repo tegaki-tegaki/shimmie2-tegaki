@@ -123,8 +123,3 @@ jobs:
             export TEST_DSN="sqlite:data/shimmie.sqlite"
         fi
         vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-clover=data/coverage.clover
-
-    - name: Upload coverage
-      if: matrix.php == '8.1'
-      run: |
-          vendor/bin/ocular code-coverage:upload --format=php-clover data/coverage.clover
