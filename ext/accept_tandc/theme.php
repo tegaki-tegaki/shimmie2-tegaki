@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Shimmie2;
 
-class AcceptTandCTheme extends Themelet {
-
+class AcceptTandCTheme extends Themelet
+{
 }
