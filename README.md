@@ -16,6 +16,8 @@
 
 # What's different?!
 
+- `Accept Terms and Conditions` extension (inspired by r34)
+- `docker-compose.yml` for handy development (and deployment I suppose)
 - custom theme `r34custom` (you could use it as a more "whitelabel" rule34 theme)
   - removed a bunch of the juicyADS stuff, tracking etc...
   - removed links that go outside the booru itself (hard-coded links to paheal.net), they should now all be relative instead.

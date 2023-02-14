@@ -34,6 +34,7 @@
 			<li><a href="index.php?q=/comment/list" class="sub_option">Comments</a></li>
 			<li><a href="index.php?q=/tags" class="sub_option">Tags</a></li>
 			<li><a href="index.php?q=/pool/list" class="sub_option">Pools</a></li>
+			<li><a href="index.php?q=/wiki" class="sub_option">Wiki</a></li>
 		</ul>
 		</li>
 	</ul>
