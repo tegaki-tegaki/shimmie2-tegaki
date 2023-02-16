@@ -23,6 +23,12 @@ services:
     ports:
       - 8000:8000
     networks: [ "shimmie_network" ]
+  networklogger:
+    container_name: networklogger
+    build:
+      context: ./docker
+      dockerfile: ./Dockerfile.networklogger
+    networks: [ "shimmie_network" ]
 networks:
   shimmie_network:
     driver: bridge

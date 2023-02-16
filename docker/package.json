@@ -1,0 +1,9 @@
+{
+  "name": "log_port",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.mjs",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
