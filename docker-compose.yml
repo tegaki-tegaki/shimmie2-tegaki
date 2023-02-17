@@ -23,6 +23,7 @@ services:
     ports:
       - 8000:8000
     networks: [ "shimmie_network" ]
+    tty: true
   networklogger:
     container_name: networklogger
     build:
