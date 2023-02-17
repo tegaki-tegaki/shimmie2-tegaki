@@ -87,16 +87,16 @@ class TranscodeVideo extends Extension
 
             // currently, only transcode those massive GIF's! (lowest hanging fruit?)
             if (in_array($mime, array_values(self::INPUT_MIMES))) {
-                   try {
-                       $new_tmp_name = tempnam(sys_get_temp_dir(), "shimmie_transcode");
-                       $new_video = $this->transcode_animated_gif($event->tmpname, $mime, MimeType::MP4_VIDEO, $new_tmp_name);
-                       $event->set_mime(MimeType::MP4_VIDEO);
-                       $event->set_tmpname($new_video);
-                   } catch (\Exception $e) {
-                       log_error("transcode_video", "Error while performing upload transcode: ".$e->getMessage());
-                       // We don't want to interfere with the upload process,
-                       // so if something goes wrong the untranscoded image jsut continues
-                   }
+                try {
+                    $new_tmp_name = tempnam(sys_get_temp_dir(), "shimmie_transcode");
+                    $new_video = $this->transcode_animated_gif($event->tmpname, $mime, MimeType::MP4_VIDEO, $new_tmp_name);
+                    $event->set_mime(MimeType::MP4_VIDEO);
+                    $event->set_tmpname($new_video);
+                } catch (\Exception $e) {
+                    log_error("transcode_video", "Error while performing upload transcode: " . $e->getMessage());
+                    // We don't want to interfere with the upload process,
+                    // so if something goes wrong the untranscoded image jsut continues
+                }
             } else {
                 log_info('transcode_video', 'uploaded file is not in INPUT_MIMES list (transcoding)');
             }
@@ -310,9 +310,13 @@ class TranscodeVideo extends Extension
 
         $args = [
             escapeshellarg($ffmpeg),
-            "-y", "-i", escapeshellarg($source_file),
-            "-pix_fmt","yuv420p",
-            "-f", "mp4",
+            "-y",
+            "-i",
+            escapeshellarg($source_file),
+            "-pix_fmt",
+            "yuv420p",
+            "-f",
+            "mp4",
             escapeshellarg($target_file),
         ];
 
@@ -322,7 +326,7 @@ class TranscodeVideo extends Extension
 
         exec($cmd, $output, $ret);
 
-        if ((int)$ret === (int)0) {
+        if ((int) $ret === (int) 0) {
             log_debug('media', "Transcoding gif with command `$cmd`, returns $ret");
             $ok = true;
         } else {
