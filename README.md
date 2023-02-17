@@ -16,6 +16,8 @@
 
 - `Accept Terms and Conditions` extension (inspired by r34)
 - `docker-compose.yml` for handy development (and deployment I suppose)
+  - `db` container (PostgreSQL)
+  - `networklogger` optional container (point `log_net` to it at `networklogger:35353` and run with docker-compose argument `--profile networklogger`)
   - includes changes to the `log_net` extension, and a networklogger (written in nodejs)
 - custom theme `r34custom` (you could use it as a more "whitelabel" rule34 theme)
   - removed a bunch of the juicyADS stuff, tracking etc...

@@ -29,6 +29,8 @@ services:
       context: ./docker
       dockerfile: ./Dockerfile.networklogger
     networks: [ "shimmie_network" ]
+    profiles:
+      - networklogger
 networks:
   shimmie_network:
     driver: bridge
