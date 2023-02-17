@@ -6,8 +6,8 @@ namespace Shimmie2;
 
 require_once "config.php";
 /*
-* This is used by the image transcoding code when there is an error while transcoding
-*/
+ * This is used by the image transcoding code when there is an error while transcoding
+ */
 class VideoTranscodeException extends SCoreException
 {
 }
@@ -20,9 +20,13 @@ class TranscodeVideo extends Extension
 
     public const ACTION_BULK_TRANSCODE = "bulk_transcode_video";
 
+    public const INPUT_MIMES = [
+        "GIF" => MimeType::GIF,
+    ];
+
     public const FORMAT_NAMES = [
-      VideoContainers::MKV => "matroska",
-      VideoContainers::WEBM => "webm",
+        VideoContainers::MKV => "matroska",
+        VideoContainers::WEBM => "webm",
         VideoContainers::OGG => "ogg",
         VideoContainers::MP4 => "mp4",
     ];
@@ -48,9 +52,9 @@ class TranscodeVideo extends Extension
     {
         global $user;
 
-        if ($event->image->video===true && $user->can(Permissions::EDIT_FILES)) {
+        if ($event->image->video === true && $user->can(Permissions::EDIT_FILES)) {
             $options = self::get_output_options($event->image->get_mime(), $event->image->video_codec);
-            if (!empty($options)&&sizeof($options)>1) {
+            if (!empty($options) && sizeof($options) > 1) {
                 $event->add_part($this->theme->get_transcode_html($event->image, $options));
             }
         }
@@ -60,39 +64,43 @@ class TranscodeVideo extends Extension
     {
         $sb = $event->panel->create_new_block("Video Transcode");
         $sb->start_table();
-        $sb->add_bool_option(TranscodeVideoConfig::ENABLED, "Allow transcoding images: ", true);
+        $sb->add_bool_option(TranscodeVideoConfig::ENABLED, "Allow transcoding videos", true);
         $sb->add_bool_option(TranscodeVideoConfig::UPLOAD_TO_NATIVE_CONTAINER, "Convert videos using MPEG-4 or WEBM to their native containers:", true);
+        $sb->add_bool_option(TranscodeVideoConfig::UPLOAD, "Transcode video on upload (only GIF)", true);
         $sb->end_table();
     }
 
     public function onDataUpload(DataUploadEvent $event)
     {
-//        global $config;
-//
-//        if ($config->get_bool(TranscodeVideoConfig::UPLOAD) == true) {
-//            $ext = strtolower($event->type);
-//
-//            $ext = Media::normalize_format($ext);
-//
-//            if ($event->type=="gif"&&Media::is_animated_gif($event->tmpname)) {
-//                return;
-//            }
-//
-//            if (in_array($ext, array_values(self::INPUT_FORMATS))) {
-//                $target_format = $config->get_string(TranscodeVideoConfig::UPLOAD_PREFIX.$ext);
-//                if (empty($target_format)) {
-//                    return;
-//                }
-//                try {
-//                    $new_image = $this->transcode_image($event->tmpname, $ext, $target_format);
-//                    $event->set_tmpname($new_image, Media::determine_ext($target_format));
-//                } catch (Exception $e) {
-//                    log_error("transcode_video", "Error while performing upload transcode: ".$e->getMessage());
-//                    // We don't want to interfere with the upload process,
-//                    // so if something goes wrong the untranscoded image jsut continues
-//                }
-//            }
-//        }
+        global $config;
+
+        $upload_transcode_enabled = $config->get_bool(TranscodeVideoConfig::UPLOAD, false) === true;
+
+        if ($upload_transcode_enabled) {
+            $mime = strtolower($event->mime);
+            $is_animated_gif = $mime === MimeType::GIF && MimeType::is_animated_gif($event->tmpname);
+
+            if (!$is_animated_gif) {
+                log_info('transcode_video', "static gif will not be video transcoded");
+                return;
+            }
+
+            // currently, only transcode those massive GIF's! (lowest hanging fruit?)
+            if (in_array($mime, array_values(self::INPUT_MIMES))) {
+                   try {
+                       $new_tmp_name = tempnam(sys_get_temp_dir(), "shimmie_transcode");
+                       $new_video = $this->transcode_animated_gif($event->tmpname, $mime, MimeType::MP4_VIDEO, $new_tmp_name);
+                       $event->set_mime(MimeType::MP4_VIDEO);
+                       $event->set_tmpname($new_video);
+                   } catch (\Exception $e) {
+                       log_error("transcode_video", "Error while performing upload transcode: ".$e->getMessage());
+                       // We don't want to interfere with the upload process,
+                       // so if something goes wrong the untranscoded image jsut continues
+                   }
+            } else {
+                log_info('transcode_video', 'uploaded file is not in INPUT_MIMES list (transcoding)');
+            }
+        }
     }
 
 
@@ -105,7 +113,7 @@ class TranscodeVideo extends Extension
             if ($event->count_args() >= 1) {
                 $image_id = int_escape($event->get_arg(0));
             } elseif (isset($_POST['image_id'])) {
-                $image_id =  int_escape($_POST['image_id']);
+                $image_id = int_escape($_POST['image_id']);
             } else {
                 throw new VideoTranscodeException("Can not transcode video: No valid ID given.");
             }
@@ -117,7 +125,7 @@ class TranscodeVideo extends Extension
                     try {
                         $this->transcode_and_replace_video($image_obj, $_POST['transcode_format']);
                         $page->set_mode(PageMode::REDIRECT);
-                        $page->set_redirect(make_link("post/view/".$image_id));
+                        $page->set_redirect(make_link("post/view/" . $image_id));
                     } catch (VideoTranscodeException $e) {
                         $this->theme->display_transcode_error($page, "Error Transcoding", $e->getMessage());
                     }
@@ -162,11 +170,11 @@ class TranscodeVideo extends Extension
                             // transcodes recorded already, otherwise the image entries will be stuck pointing to
                             // missing image files
                             $database->commit();
-                            if ($output_image!=$image) {
+                            if ($output_image != $image) {
                                 $total++;
                             }
                         } catch (\Exception $e) {
-                            log_error("transcode_video", "Error while bulk transcode on item {$image->id} to $format: ".$e->getMessage());
+                            log_error("transcode_video", "Error while bulk transcode on item {$image->id} to $format: " . $e->getMessage());
                             try {
                                 $database->rollback();
                             } catch (\Exception $e) {
@@ -180,17 +188,19 @@ class TranscodeVideo extends Extension
         }
     }
 
-    private static function get_output_options(?String $starting_container = null, ?String $starting_codec = null): array
+    private static function get_output_options(?string $starting_container = null, ?string $starting_codec = null): array
     {
         $output = ["" => ""];
 
 
         foreach (VideoContainers::ALL as $container) {
-            if ($starting_container==$container) {
+            if ($starting_container == $container) {
                 continue;
             }
-            if (!empty($starting_codec)&&
-                !VideoContainers::is_video_codec_supported($container, $starting_codec)) {
+            if (
+                !empty($starting_codec) &&
+                !VideoContainers::is_video_codec_supported($container, $starting_codec)
+            ) {
                 continue;
             }
             $description = MimeMap::get_name_for_mime($container);
@@ -199,13 +209,13 @@ class TranscodeVideo extends Extension
         return $output;
     }
 
-    private function transcode_and_replace_video(Image $image, String $target_mime): Image
+    private function transcode_and_replace_video(Image $image, string $target_mime): Image
     {
-        if ($image->get_mime()==$target_mime) {
+        if ($image->get_mime() == $target_mime) {
             return $image;
         }
 
-        if ($image->video==null||($image->video===true && empty($image->video_codec))) {
+        if ($image->video == null || ($image->video === true && empty($image->video_codec))) {
             // If image predates the media system, or the video codec support, run a media check
             send_event(new MediaCheckPropertiesEvent($image));
             $image->save_to_db();
@@ -243,7 +253,7 @@ class TranscodeVideo extends Extension
     }
 
 
-    private function transcode_video(String $source_file, String $source_video_codec, String $target_mime, string $target_file): string
+    private function transcode_video(string $source_file, string $source_video_codec, string $target_mime, string $target_file): string
     {
         global $config;
 
@@ -279,6 +289,45 @@ class TranscodeVideo extends Extension
         $command->add_escaped_arg($target_file);
 
         $command->execute(true);
+
+        return $target_file;
+    }
+
+    // TODO: yes this is code duplication, so this should be merged with the other transcode function above!
+    private function transcode_animated_gif(string $source_file, string $source_video_codec, string $target_mime, string $target_file): string
+    {
+        global $config;
+
+        if (empty($source_video_codec)) {
+            throw new VideoTranscodeException("Cannot transcode item because it's video codec is not known");
+        }
+
+        $ffmpeg = $config->get_string(MediaConfig::FFMPEG_PATH);
+
+        if (empty($ffmpeg)) {
+            throw new VideoTranscodeException("ffmpeg path not configured");
+        }
+
+        $args = [
+            escapeshellarg($ffmpeg),
+            "-y", "-i", escapeshellarg($source_file),
+            "-pix_fmt","yuv420p",
+            "-f", "mp4",
+            escapeshellarg($target_file),
+        ];
+
+        $cmd = escapeshellcmd(implode(" ", $args));
+
+        log_debug('transcode_video', "Transcoding gif with command `$cmd`...");
+
+        exec($cmd, $output, $ret);
+
+        if ((int)$ret === (int)0) {
+            log_debug('media', "Transcoding gif with command `$cmd`, returns $ret");
+            $ok = true;
+        } else {
+            log_error('media', "Transcoding gif with command `$cmd`, returns $ret");
+        }
 
         return $target_file;
     }
