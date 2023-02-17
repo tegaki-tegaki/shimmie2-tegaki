@@ -81,21 +81,21 @@ class TranscodeVideo extends Extension
             $is_animated_gif = $mime === MimeType::GIF && MimeType::is_animated_gif($event->tmpname);
 
             if (!$is_animated_gif) {
-                log_info('transcode_video', "static gif will not be video transcoded");
+                log_info('transcode_video', "non-gif & static gif will not be video transcoded");
                 return;
             }
 
             // currently, only transcode those massive GIF's! (lowest hanging fruit?)
             if (in_array($mime, array_values(self::INPUT_MIMES))) {
                 try {
-                    $new_tmp_name = tempnam(sys_get_temp_dir(), "shimmie_transcode");
+                    $new_tmp_name = tempnam(sys_get_temp_dir(), "shimmie_transcode_video");
                     $new_video = $this->transcode_animated_gif($event->tmpname, $mime, MimeType::MP4_VIDEO, $new_tmp_name);
                     $event->set_mime(MimeType::MP4_VIDEO);
                     $event->set_tmpname($new_video);
                 } catch (\Exception $e) {
                     log_error("transcode_video", "Error while performing upload transcode: " . $e->getMessage());
                     // We don't want to interfere with the upload process,
-                    // so if something goes wrong the untranscoded image jsut continues
+                    // so if something goes wrong the untranscoded image just continues
                 }
             } else {
                 log_info('transcode_video', 'uploaded file is not in INPUT_MIMES list (transcoding)');

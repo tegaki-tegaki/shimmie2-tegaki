@@ -183,7 +183,7 @@ class TranscodeImage extends Extension
                 } catch (\Exception $e) {
                     log_error("transcode", "Error while performing upload transcode: ".$e->getMessage());
                     // We don't want to interfere with the upload process,
-                    // so if something goes wrong the untranscoded image jsut continues
+                    // so if something goes wrong the untranscoded image just continues
                 }
             }
         }

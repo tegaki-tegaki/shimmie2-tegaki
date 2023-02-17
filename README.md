@@ -21,8 +21,11 @@
 - custom theme `r34custom` (you could use it as a more "whitelabel" rule34 theme)
   - removed a bunch of the juicyADS stuff, tracking etc...
   - removed links that go outside the booru itself (hard-coded links to paheal.net)
-- attempt to make most of the core extensions work OOTB with PostgreSQL
-  - many extensions seem to be either MySQL specific or in some other way broken
+- attempt to make most of the core extensions work OOTB with PostgreSQL (ambitious never ending task?)
+  - many extensions seem to be either MySQL specific
+- "fixes" (pending review... more like "hacks" until then!)
+  - `ext/transcode_video`
+    - should now be able to convert from GIF (they take up so much space...) to mp4 on upload
 - `/scripts` directory for even more handy dev stuff
 
 # Debugging and Logging
