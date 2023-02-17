@@ -37,9 +37,6 @@ function log_msg(string $section, int $priority, string $message, ?string $flash
     send_event(new LogEvent($section, $priority, $message));
     $threshold = defined("CLI_LOG_LEVEL") ? CLI_LOG_LEVEL : 0;
 
-    // print("$section: $message\n"); // prints to the rendered html
-    // fwrite(STDERR, date("c")." $section: $message\n"); // print to the stderr
-
     if ((PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg') && ($priority >= $threshold)) {
         print date("c") . " $section: $message\n";
         ob_flush();
