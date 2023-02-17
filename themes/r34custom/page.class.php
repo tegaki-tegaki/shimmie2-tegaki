@@ -136,7 +136,7 @@ EOD;
 		</article>
 
 		<footer>
-			Does anybody read this?
+			<a href="https://github.com/tegaki-tegaki/shimmie2-tegaki">source</a>
 		</footer>
 	</body>
 </html>
