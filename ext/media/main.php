@@ -337,7 +337,8 @@ class Media extends Extension
             $args = [
                 escapeshellarg($ffmpeg),
                 "-y", "-i", escapeshellarg($inname),
-                "-vf", "scale=$scaled_size[0]:$scaled_size[1]:force_original_aspect_ratio=decrease,thumbnail=n=2",
+                "-vf", "scale=$scaled_size[0]x$scaled_size[1]:force_original_aspect_ratio=decrease,thumbnail=n=2",
+                "-f", "image2",
                 "-vframes", "1",
                 "-c:v", "png",
                 escapeshellarg($tmpname),

@@ -18,7 +18,6 @@
 - `docker-compose.yml` for handy development (and deployment I suppose)
   - `db` container (PostgreSQL)
   - `networklogger` optional container (point `log_net` to it at `networklogger:35353` and run with docker-compose argument `--profile networklogger`)
-  - includes changes to the `log_net` extension, and a networklogger (written in nodejs)
 - custom theme `r34custom` (you could use it as a more "whitelabel" rule34 theme)
   - removed a bunch of the juicyADS stuff, tracking etc...
   - removed links that go outside the booru itself (hard-coded links to paheal.net)
@@ -37,9 +36,14 @@ define('DEBUG', true);
 define("CLI_LOG_LEVEL", 0);
 ```
 
-2. You should also enable the `Logging (Network)` extension in the extension manager.
+2. Enable the `log_console` extension in the manager GUI. This is by far the better way to log.
 
-3. You might also want to unsuppress the PHP output from the PHP command itself (started by the docker container) by removing `-q` from it.
+2. If you want to use the `log_net` extension in the extension manager
+    1. make sure that the `log_net` extension sends data to `networklogger:35353`
+    2. start docker-compose with `--profile networklogger`
+    3. enable the extension in the manager GUI.
+
+3. You might also want to unsuppress the PHP output from the PHP command itself (started by the docker container) by removing `-q` from it, it is however quite noisy.
 
 inside `tests/docker-init.sh`:
 ```shell
