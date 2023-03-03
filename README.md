@@ -60,6 +60,14 @@ exec /usr/local/bin/su-exec shimmie:shimmie \
 ```
 (note the above has no '-q' in it)
 
+# How this repo will update alongside shish/shimmie2 ?
+
+- I will update my main branch to the upstream repo (upstream/master) as often as I remember to.
+- I will **REBASE** the history on my `main` branch to re-play all my changes to be _ontop_ of the latest `shimmie2/master` (this makes the changes look linear and "simple")
+  - to see all current code changes between this repository's `main` branch and the `upstream` repository click [here](https://github.com/tegaki-tegaki/shimmie2-tegaki/compare/upstream..main).
+  - this means that if you clone this repo you should expect history to _change_ on the `main` branch over time. I consider the "real" source of truth to be shish/shimmie2.
+- If I make any code submissions or PR's back to the original, that code will eventually disappear from my `main` branch and should show up in the mainline repo.
+
 # Documentation
 
 please see the [original docs](https://github.com/shish/shimmie2/wiki)
