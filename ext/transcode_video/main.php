@@ -90,7 +90,6 @@ class TranscodeVideo extends Extension
                 try {
                     $new_tmp_name = tempnam(sys_get_temp_dir(), "shimmie_transcode_video");
                     $new_video = $this->transcode_animated_gif($event->tmpname, $mime, MimeType::MP4_VIDEO, $new_tmp_name);
-                    $event->set_mime(MimeType::MP4_VIDEO);
                     $event->set_tmpname($new_video);
                 } catch (\Exception $e) {
                     log_error("transcode_video", "Error while performing upload transcode: " . $e->getMessage());
