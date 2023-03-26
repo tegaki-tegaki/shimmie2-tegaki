@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Navbar controls
-var navHidden = false;
+var navHidden = true;
 function toggleNav() {
 	if(navHidden) {
 		$('BODY').removeClass('navHidden');
@@ -18,8 +18,9 @@ function toggleNav() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	if(Cookies.get("ui-shownav") === "false") {
-		toggleNav();
+	if(Cookies.get("ui-shownav") === "true") {
+		$('BODY').removeClass('navHidden');
+		navHidden = false;
 	}
 });
 

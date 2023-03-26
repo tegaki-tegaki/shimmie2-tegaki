@@ -8,7 +8,7 @@
 	<tr>
 		<form action='/post/list' method='GET' id="barbot">
 			<td id="nav-toggle">
-				<a style="font-size: 2em;" onclick="toggleNav();">&nbsp;Sidebar&nbsp;</a>
+				<a style="font-size: 2em;" onclick="toggleNav();">&#9776;</a>
 			</td>
 			<td id="mini-logo">
 				<a class="vis-mobile" href="index.php?q=/post/list"><img alt="logo" src="/themes/r34custom/rule34_logo_top.png" style="height: 34px;"/></a>

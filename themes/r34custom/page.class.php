@@ -112,7 +112,7 @@ $header_html
 		</script>
 	</head>
 
-	<body>
+	<body class="navHidden">
 <table id="header" width="100%">
 	<tr>
 		<td>
