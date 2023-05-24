@@ -8,6 +8,13 @@ use GQLA\Type;
 use GQLA\Field;
 use GQLA\Query;
 
+
+class HideTagsConfig
+{
+    public const ENABLED = "hide_tags_enabled";
+    public const VERSION = "hide_tags_version";
+}
+
 /**
  * Class Image
  *
@@ -274,6 +281,7 @@ class Image
 
     private static function terms_to_conditions(array $terms): array
     {
+        global $config;
         $tag_conditions = [];
         $img_conditions = [];
         $stpen = 0;  // search term parse event number
@@ -289,6 +297,15 @@ class Image
         } elseif (!empty($stpe->querylets)) {
             foreach ($stpe->querylets as $querylet) {
                 $img_conditions[] = new ImgCondition($querylet, true);
+            }
+        }
+
+        if ($config->get_bool(HideTagsConfig::ENABLED)) {
+            if (in_array('show_hidden', $terms)) {
+                $key = array_search('show_hidden', $terms);
+                unset($terms[$key]);
+            } else {
+                array_push($terms, '-hidden');
             }
         }
 
